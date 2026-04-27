@@ -53,3 +53,50 @@
 ```bash
 git clone https://github.com/shinkai23/task-manager-by-aws.git
 cd task-manager-by-aws
+```
+
+### 2. Virtual Environment
+```bash
+python -m venv venv
+source venv/bin/activate
+```
+
+### 3. Install
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Run
+```
+uvicorn app.main:app --reload
+```
+
+---
+### Directory Structure
+
+```コード
+app/
+ ├── models/
+ ├── schemas/
+ ├── routers/
+ ├── services/
+ └── main.py
+
+docs/
+ ├── er-diagram.png
+ ├── db-design.md
+ └── schema.sql
+```
+---
+### Database Design
+
+[db-design.md](../develop/docs/db-design.md#L1-20)
+
+### Future Improvements
+- Cognito導入
+- S3によるファイル管理
+- CI/CD構築
+- コンテナ化（ECS）
+
+### Author 
+https://github.com/shinkai23
