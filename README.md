@@ -1,8 +1,8 @@
-# Task Manager (AWS × FastAPI)
+# Task Manager
 
 ## Overview
 タスク管理を行うWebアプリケーション。  
-ユーザーごとにタスクの作成・更新・削除（CRUD）を行う。
+ユーザーごとにタスクの作成・読取・更新・削除（CRUD）を行う。
 
 ---
 
