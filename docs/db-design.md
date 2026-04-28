@@ -52,3 +52,41 @@
 
 ```text
 users.id 1 ──── N tasks.user_id
+```
+## Design Considerations
+
+### 1. 正規化
+- ユーザとタスクを分離し、冗長性を排除
+- 第3正規形を満たす設計
+
+### 2. セキュリティ
+- パスワードはハッシュ化して保存
+- emailは一意制約を付与
+
+### 3. データ整合性
+- 外部キー制約により参照整合性を担保
+- ENUMで状態・優先度の値を制限
+
+### 4. 拡張性
+- tasksにタグ機能などを追加可能
+- usersにプロフィール情報を追加可能
+
+### 5. 論理削除
+- deleted_atを使用し、データの復元・監査を可能
+
+## Index Strategy
+- tasks.user_id: ユーザごとの検索最適化
+- tasks.status: ステータス別検索用
+
+```sql
+CREATE INDEX idx_tasks_user_id ON tasks(user_id);
+CREATE INDEX idx_tasks_status ON tasks(status);
+```
+
+## Future Improvements
+- タグ機能
+- カテゴリ管理
+- 通知機能
+- 監査ログの追加
+
+
