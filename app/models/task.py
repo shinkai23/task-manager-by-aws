@@ -1,6 +1,7 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Text
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Text, Enum
 from sqlalchemy.orm import relationship
 from app.db.session import Base
+from app.schemas.enums import TaskStatus, TaskPriority
 from datetime import datetime
 
 class Task(Base):
@@ -10,8 +11,8 @@ class Task(Base):
     user_id = Column(Integer, ForeignKey("users.id"))
     title = Column(String(100), nullable=False)
     description = Column(Text)
-    status = Column(String(20), default="todo")
-    priority = Column(String(20), default="medium")
+    status = Column(Enum(TaskStatus))
+    priority = Column(Enum(TaskPriority))
     created_at = Column(DateTime, default=datetime.utcnow)
 
     user = relationship("User", back_populates="tasks")
