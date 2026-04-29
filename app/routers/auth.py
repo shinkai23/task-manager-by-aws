@@ -5,7 +5,7 @@ from app.models.user import User
 from app.db.deps import get_db
 from app.utils.security import verify_password, create_access_token
 
-router = APIRouter("/auth", tags=["auth"])
+router = APIRouter(prefix="/auth", tags=["auth"])
 
 @router.post("/login", response_model=TokenResponse)
 def login(data: LoginRequest, db: Session = Depends(get_db)):
