@@ -9,7 +9,7 @@ def create_task(data, user_id: int, db: Session):
     return task
 
 def get_task(task_id: int, user_id: int, db: Session):
-    return task = db.query(Task).filter(Task.id == task_id, Task.user_id == user_id).first()
+    return db.query(Task).filter(Task.id == task_id, Task.user_id == user_id).first()
 
 def get_tasks(user_id: int, db: Session):
     return db.query(Task).filter(Task.user_id == user_id).all()

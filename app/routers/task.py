@@ -17,7 +17,7 @@ def create_task(data: TaskCreate, user_id: int = Depends(get_current_user_id), d
 
 ## Read 一件取得
 @router.get("/{task_id}", response_model=TaskResponse)
-def read_task(task_id: int, user_id: int = Depends(get_current_user_id), db: Session = Depends(get_db)):
+def get_task(task_id: int, user_id: int = Depends(get_current_user_id), db: Session = Depends(get_db)):
     task = task_service.get_task(task_id, user_id, db)
     if not task:
         raise HTTPException(status=404, detail="Task not found")
@@ -25,7 +25,7 @@ def read_task(task_id: int, user_id: int = Depends(get_current_user_id), db: Ses
 
 ## Read 一覧取得
 @router.get("/", response_model=list[TaskResponse])
-def read_tasks(user_id: int = Depends(get_current_user_id), db: Session = Depends(get_db)):
+def get_tasks(user_id: int = Depends(get_current_user_id), db: Session = Depends(get_db)):
     tasks = task_service.get_tasks(user_id, db)
     return tasks
 
