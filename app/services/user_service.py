@@ -1,11 +1,12 @@
 from sqlalchemy.orm import Session
 from app.models.user import User
 from app.utils.security import hash_password, verify_password
+from app.exceptions import NotFoundException, BadRequestException, UnauthorizedException
 
 def create_user(db: Session, *, data):
     existing = db.query(User).filter(User.email == data.email).first()
     if existing:
-        return None
+        raise BadRequestException("Email already registered")
 
     user = User(
         username=data.username,
@@ -22,12 +23,17 @@ def authenticate_user(db: Session, *, data):
     user = db.query(User).filter(User.email == data.email).first()
 
     if not user:
-        return None
+        raise UnauthorizedException("Invalid credentials")
     
     if not verify_password(data.password, user.password_hash):
-        return None
+        raise UnauthorizedException("Invalid credentials")
     
     return user
 
 def get_user_by_id(db: Session, *, user_id: int):
-    return db.query(User).filter(User.id == user_id).first()
+    user = db.query(User).filter(User.id == user_id).first()
+
+    if not user:
+        raise NotFoundException("User not found")
+    
+    return user
