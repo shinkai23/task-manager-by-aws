@@ -1,26 +1,28 @@
 from aqlalchemy.orm import Session
 from app.models.task import Task
 
-def create_task(data, user_id: int, db: Session):
+def create_task(db: Session, *, user_id: int, data):
     task = Task(**data.dict(), user_id=user_id)
     db.add(task)
     db.commit()
     db.refresh(task)
     return task
 
-def get_task(task_id: int, user_id: int, db: Session):
+def get_tasks(db: Session, *, user_id: int,):
+    return db.query(Task).filter( Task.user_id == user_id).all()
+
+def get_tasks(db: Session, *, task_id: int, user_id: int):
     return db.query(Task).filter(Task.id == task_id, Task.user_id == user_id).first()
 
-def get_tasks(user_id: int, db: Session):
-    return db.query(Task).filter(Task.user_id == user_id).all()
-
-def update_task(task, data, db: Session):
+def update_task(db: Session, *, task, data):
     for key, value in data.dict(exclude_unset=True).items():
         setattr(task, key, value)
     
     db.commit()
     db.refresh(task)
+    return task
 
-def delete_task(task, db:Session):
+def delete_task(db:Session, *, task):
     db.delete(task)
     db.commit()
+    return True
