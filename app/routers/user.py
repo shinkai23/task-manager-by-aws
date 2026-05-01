@@ -5,29 +5,24 @@ from app.models.user import User
 from app.db.deps import get_db
 from app.utils.deps import get_current_user_id
 from app.utils.security import hash_password
+from app.services import user_service
 
 router = APIRouter(prefix="/users")
 
 @router.post("/", response_model=UserResponse)
 def create_user(data: UserCreate, db: Session = Depends(get_db)):
-    existing = db.query(User).filter(User.emails == data.email).first()
-    if existing:
-        raise HTTPException(status_code=400, detail = "Email already registered")
-    
-    hashed_password = hash_password(data.password)
-
-    user = User(
-        username = data.username,
-        email = data.email,
-        password_hash = hashed_password
+    user = user_service.create_user(
+        data.username, 
+        data.email,
+        data.password,
+        db
     )
 
-    db.add(user)
-    db.commit()
-    db.refresh(user)
+    if not user:
+        raise HTTPException(status_code=400, detail = "Email already registered")
+
     return user
 
 @router.get("/me", response_model=UserResponse)
 def get_me(user_id: int = Depends(get_current_user_id), db: Session = Depends(get_db)):
-    user = db.query(User).filter(User.id == user_id).first()
-    return user
+    return user_service.get_user_by_id(user_id)
