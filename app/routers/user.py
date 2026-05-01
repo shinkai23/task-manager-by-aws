@@ -6,6 +6,7 @@ from app.db.deps import get_db
 from app.utils.deps import get_current_user_id
 from app.utils.security import hash_password
 from app.services import user_service
+from app.exceptions import BadRequestException
 
 router = APIRouter(prefix="/users", tags=["users"])
 
@@ -14,7 +15,7 @@ def create_user(data: UserCreate, db: Session = Depends(get_db)):
     user = user_service.create_user(db, data=data)
 
     if not user:
-        raise HTTPException(status_code=400, detail = "Email already registered")
+        raise BadRequestException("Email already registered")
 
     return user
 

@@ -5,6 +5,7 @@ from app.models.task import Task
 from app.db.deps import get_db
 from app.utils.deps import get_current_user_id
 from app.services import task_service
+from app.exceptions import NotFoundException
 
 router = APIRouter(prefix="/tasks", tags=["tasks"])
  
@@ -25,7 +26,7 @@ def get_tasks(db: Session = Depends(get_db), user_id: int = Depends(get_current_
 def get_task(task_id: int, db: Session = Depends(get_db), user_id: int = Depends(get_current_user_id)):
     task = task_service.get_task(db, task_id=task_id, user_id=user_id)
     if not task:
-        raise HTTPException(status=404, detail="Task not found")
+        raise NotFoundException("Task not found")
     return task
 
 ## Update (現状タイトルだけ変更)
@@ -33,7 +34,7 @@ def get_task(task_id: int, db: Session = Depends(get_db), user_id: int = Depends
 def update_task(task_id: int, data: TaskUpdate, user_id: int = Depends(get_current_user_id), db: Session = Depends(get_db)):
     task = task_service.get_task(db, task_id=task_id, user_id=user_id)
     if not task:
-        raise HTTPException(status=404, detail="Task not found")
+        raise NotFoundException("Task not found")
     return task_service.update_task(db, task=task, data=data)
 
 ## Delete
@@ -41,7 +42,7 @@ def update_task(task_id: int, data: TaskUpdate, user_id: int = Depends(get_curre
 def delete_task(task_id: int, db: Session = Depends(get_db), user_id: int = Depends(get_current_user_id)):
     task = task_service.get_task(db, task_id=task_id, user_id=user_id)
     if not task:
-        raise HTTPException(status=404, detail="Task not found")
+        raise NotFoundException("Task not found")
     
     task_service.delete_task(db, task=task)
     return {"message": "deleted"}
