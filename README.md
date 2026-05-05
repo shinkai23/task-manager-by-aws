@@ -1,56 +1,44 @@
 # Task Manager
 
 ## Overview
-タスク管理を行うWebアプリケーション。  
-ユーザーごとにタスクの作成・読取・更新・削除（CRUD）を行う。
-
----
+ユーザーごとにタスクを管理できる FastAPI 製のタスク管理 API です。
+JWT 認証により、ログイン中のユーザーは自分のタスクだけを作成・取得・更新・削除できます。
 
 ## Features
-- ユーザー認証（JWT）
-- タスクCRUD
-- ステータス管理（todo / doing / done）
-- 優先度管理（low / medium / high）
-
----
+- ユーザー登録
+- JWT ログイン認証
+- ユーザー別タスク CRUD
+- タスクステータス管理: `todo` / `doing` / `done`
+- 優先度管理: `low` / `medium` / `high`
 
 ## Tech Stack
 - Backend: FastAPI
-- DB: MySQL (RDS)
 - ORM: SQLAlchemy
-- Infra: AWS (EC2, RDS)
-- Others: Docker（任意）
-
----
+- DB: SQLite for local development, MySQL/RDS for production
+- Auth: JWT
+- Infra: AWS EC2 / RDS
 
 ## Architecture
 ![architecture](docs/aws-architecture.png)
 
----
-
 ## ER Diagram
 ![er-diagram](docs/er-diagram.png)
 
----
-
 ## API Endpoints
 
+### Users
+- `POST /users/`
+- `GET /users/me`
+
 ### Auth
-- POST /register
-- POST /login
+- `POST /auth/login`
 
 ### Tasks
-- GET /tasks
-- POST /tasks
-- PUT /tasks/{id}
-- DELETE /tasks/{id}
-
----
-
-## Demo
-http://15.134.202.120/docs
-
----
+- `GET /tasks/`
+- `POST /tasks/`
+- `GET /tasks/{task_id}`
+- `PUT /tasks/{task_id}`
+- `DELETE /tasks/{task_id}`
 
 ## Setup
 
@@ -66,42 +54,70 @@ python -m venv venv
 source venv/bin/activate
 ```
 
+Windows PowerShell:
+
+```powershell
+.\venv\Scripts\Activate.ps1
+```
+
 ### 3. Install
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Run
+### 4. Environment Variables
+```bash
+cp app/.env.example app/.env
 ```
+
+Example:
+
+```env
+DATABASE_URL=sqlite:///./test.db
+SECRET_KEY=change-me
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=30
+```
+
+For MySQL/RDS:
+
+```env
+DATABASE_URL=mysql+pymysql://user:password@host:3306/dbname
+```
+
+### 5. Run
+```bash
 uvicorn app.main:app --reload
 ```
 
----
-### Directory Structure
+## Directory Structure
 
-```コード
+```text
 app/
- ├── models/
- ├── schemas/
- ├── routers/
- ├── services/
- └── main.py
+  db/
+  models/
+  repositories/
+  routers/
+  schemas/
+  services/
+  utils/
+  main.py
 
 docs/
- ├── er-diagram.png
- ├── db-design.md
- └── schema.sql
+  aws-architecture.png
+  db-design.md
+  er-diagram.png
+  schema.sql
 ```
----
-### Database Design
 
-[db-design.md](../develop/docs/db-design.md#L1-20)
+## Database Design
+[docs/db-design.md](docs/db-design.md)
 
-### Future Improvements
-- Cognito導入
-- S3によるファイル管理
-- CI/CD構築
-- コンテナ化（ECS）
+## Future Improvements
+- AWS RDS 接続の本番設定
+- CI/CD 構築
+- Docker 対応
+- Cognito 導入
 
-### Author 
+## Author
 https://github.com/shinkai23
