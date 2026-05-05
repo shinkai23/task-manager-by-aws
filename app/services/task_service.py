@@ -6,7 +6,7 @@ from app.repositories import task_repository
 
 
 def create_task(db: Session, *, user_id: int, data):
-    task = Task(**data.dict(), user_id=user_id)
+    task = Task(**data.model_dump(), user_id=user_id)
     return task_repository.create(db, task)
 
 

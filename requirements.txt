@@ -8,3 +8,5 @@ bcrypt<4
 python-jose
 email-validator
 httpx
+pytest
+alembic

@@ -19,7 +19,7 @@ def get_all(db: Session, user_id: int):
 
 
 def update(db: Session, task: Task, data):
-    for key, value in data.dict(exclude_unset=True).items():
+    for key, value in data.model_dump(exclude_unset=True).items():
         setattr(task, key, value)
 
     db.commit()
