@@ -4,6 +4,7 @@ sqlalchemy
 pymysql
 python-dotenv
 passlib[bcrypt]
+bcrypt<4
 python-jose
 email-validator
-python-dotenv
+httpx
