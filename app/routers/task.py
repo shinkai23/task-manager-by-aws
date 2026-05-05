@@ -29,7 +29,7 @@ def get_task(task_id: int, db: Session = Depends(get_db), user_id: int = Depends
 ## Update (現状タイトルだけ変更)
 @router.put("/{task_id}", response_model=TaskResponse)
 def update_task(task_id: int, data: TaskUpdate, user_id: int = Depends(get_current_user_id), db: Session = Depends(get_db)):
-    return task_service.update_task(db, task_id=task_id, user_id=user_id)
+    return task_service.update_task(db, task_id=task_id, user_id=user_id, data=data)
 
 ## Delete
 @router.delete("/{task_id}")
