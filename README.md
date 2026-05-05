@@ -87,7 +87,38 @@ DATABASE_URL=mysql+pymysql://user:password@host:3306/dbname
 
 ### 5. Run
 ```bash
+alembic upgrade head
+```
+
+```bash
 uvicorn app.main:app --reload
+```
+
+## Test
+
+```bash
+pytest
+```
+
+The test suite covers:
+- user registration and login
+- `/users/me`
+- duplicate email error handling
+- user-scoped task CRUD
+- access denial for another user's task
+
+## Migration
+
+Create or update database tables with Alembic:
+
+```bash
+alembic upgrade head
+```
+
+Rollback all migrations:
+
+```bash
+alembic downgrade base
 ```
 
 ## Directory Structure
@@ -108,6 +139,9 @@ docs/
   db-design.md
   er-diagram.png
   schema.sql
+
+migrations/
+  versions/
 ```
 
 ## Database Design

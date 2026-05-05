@@ -1,13 +1,10 @@
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
-from app.db.session import engine, Base
 from app.routers import task, user, auth
 from app.exceptions import AppException
 
 
 app = FastAPI()
-
-Base.metadata.create_all(bind=engine)
 
 app.include_router(task.router)
 app.include_router(user.router)
