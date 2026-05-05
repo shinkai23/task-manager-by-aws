@@ -1,10 +1,12 @@
 from sqlalchemy.orm import Session
 from app.models.user import User
+from app.repositories import user_repository
 from app.utils.security import hash_password, verify_password
 from app.exceptions import NotFoundException, BadRequestException, UnauthorizedException
 
 def create_user(db: Session, *, data):
-    existing = db.query(User).filter(User.email == data.email).first()
+    existing = user_repository.get_by_email(db, data.email)
+    
     if existing:
         raise BadRequestException("Email already registered")
 
@@ -14,13 +16,10 @@ def create_user(db: Session, *, data):
         password_hash=hash_password(data.password)
     )
 
-    db.add(user)
-    db.commit()
-    db.refresh(user)
-    return user
+    return user_repository.create(db, user)
 
 def authenticate_user(db: Session, *, data):
-    user = db.query(User).filter(User.email == data.email).first()
+    user = user_repository.get_by_email(db, data.email)
 
     if not user:
         raise UnauthorizedException("Invalid credentials")
@@ -31,7 +30,7 @@ def authenticate_user(db: Session, *, data):
     return user
 
 def get_user_by_id(db: Session, *, user_id: int):
-    user = db.query(User).filter(User.id == user_id).first()
+    user = user_repository.get_by_id(db, user_id)
 
     if not user:
         raise NotFoundException("User not found")
